@@ -65,6 +65,69 @@ After the fine tuning completed, you will see the predict result, `dev_predictio
 	```sh
 	{"AVERAGE": "66.298", "F1": "76.616", "EM": "55.980", "TOTAL": 3219, "SKIP": 0, "FILE": "../../cmrc_test_output_2/dev_predictions.json"}
 	```
+### Frozen tenserflow model
+
+Before run the inference on OpenVINO, we need to freeze the model to `.pb` format for model Optimizer to convert it to IR after fine tuning process is done. In here, I am refering this [page](https://docs.openvinotoolkit.org/latest/openvino_docs_MO_DG_prepare_model_convert_model_tf_specific_Convert_BERT_From_Tensorflow.html) to convert the model to IR and below are the steps which I done.
+
+1. Open the file `modeling.py` which in the `cmrc2018/baseline/` in the text editor and common out below 2 lines. They should look like this: 
+	```py
+	# if not non_static_indexes:
+    	# 	return shape
+	```
+	
+2. Open the file run_cmrc2018_drcd_baseline.py and insert the following code after the line 667: 
+	
+	```py
+	import os, sys
+	from tensorflow.python.framework import graph_io
+	with tf.Session(graph=tf.get_default_graph()) as sess:
+	  (assignment_map, initialized_variable_names) = \
+	    modeling.get_assignment_map_from_checkpoint(tf.trainable_variables(), init_checkpoint)
+	  tf.train.init_from_checkpoint(init_checkpoint, assignment_map)
+	  sess.run(tf.global_variables_initializer())
+	  frozen = tf.graph_util.convert_variables_to_constants(sess, sess.graph_def, ["unstack"])
+	  graph_io.write_graph(frozen, FLAGS.output_dir, 'inference_graph.pb', as_text=False)
+	print('BERT frozen model path {}'.format(os.path.join(os.path.dirname(__file__), 'inference_graph.pb')))
+	sys.exit(0)
+	```
+	Lines before the inserted code should look like this: 
+	
+	```py
+	(start_logits, end_logits) = create_model(
+		bert_config=bert_config,
+		is_training=is_training,
+		input_ids=input_ids,
+		input_mask=input_mask,
+		segment_ids=segment_ids,
+		input_span_mask=input_span_mask,
+		use_one_hot_embeddings=use_one_hot_embeddings)
+	```
+
+3. Run `run_cmrc2018_drcd_baseline.py` to get the `.pb` file.
+
+	```sh
+	export PATH_TO_BERT=/path/to/distilled/bert/model/3layers_large
+	export DATA_DIR=/path/to/cmrc2018/squad-style-data
+	export OUTPUT_DIR=/path/to/save/result/and/tuned_model
+
+	python run_cmrc2018_drcd_baseline.py \
+		--vocab_file=${PATH_TO_BERT}/vocab.txt \
+		--bert_config_file=${PATH_TO_BERT}/bert_config.json \
+		--init_checkpoint=${OUTPUT_DIR}/model.ckpt-2059 \
+		--do_train=False \
+		--train_file=${DATA_DIR}/cmrc2018_train.json \
+		--do_predict=True \
+		--predict_file=${DATA_DIR}/cmrc2018_dev.json \
+		--train_batch_size=32 \
+		--num_train_epochs=2 \
+		--max_seq_length=256 \
+		--doc_stride=128 \
+		--learning_rate=3e-5 \
+		--save_checkpoints_steps=1000 \
+		--output_dir=${OUTPUT_DIR} \
+		--do_lower_case=False \
+		--use_tpu=False
+	```
 
 ### Inference result
 
