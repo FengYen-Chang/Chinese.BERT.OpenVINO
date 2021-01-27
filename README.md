@@ -72,7 +72,7 @@ Before run the inference on OpenVINO, we need to freeze the model to `.pb` forma
 1. Open the file `modeling.py` which in the `cmrc2018/baseline/` in the text editor and common out below 2 lines. They should look like this: 
 	```py
 	# if not non_static_indexes:
-    	# 	return shape
+	#   return shape
 	```
 	
 2. Open the file run_cmrc2018_drcd_baseline.py and insert the following code after the line 667: 
