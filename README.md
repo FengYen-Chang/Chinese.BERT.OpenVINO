@@ -128,8 +128,20 @@ Before run the inference on OpenVINO, we need to freeze the model to `.pb` forma
 		--do_lower_case=False \
 		--use_tpu=False
 	```
+### Convert the frozen tensorflow model to Intermediate Representation (IR)
 
-### Inference result
+Please use below command to run the Model Optimizer to get the IR model
+
+```sh
+export OUTPUT_DIR=/path/to/save/result/and/tuned_model
+
+python mo.py --input_model=${OUTPUT_DIR}/inference_graph.pb \
+	-o ${OUTPUT_DIR} \
+  	--input "IteratorGetNext:0{i32}[1 256],IteratorGetNext:1{i32}[1 256],IteratorGetNext:3{i32}[1 256]" \
+  	--disable_nhwc_to_nchw
+```
+
+### Inference
 
 * Input file `cmrc2018_patched.json`:
 	```json
