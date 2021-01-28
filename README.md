@@ -3,7 +3,7 @@ This repository shows the question and answering demo with distilled Chinese BER
 
 -------
 
-First, I would like to thanks the author [xiongma](https://github.com/xiongma) who shared the roberta wwm base distilled model on his [repo.](https://github.com/xiongma/roberta-wwm-base-distill) and it is trained by Chinese dataset. And we based on this model to run SQUAD task on OpenVINO. Below are whole steps that I do to enable SQUAD task and run it with OpenVINO. 
+First, I would like to thanks the author [xiongma](https://github.com/xiongma) who shared the roberta wwm base distilled model on his [repository](https://github.com/xiongma/roberta-wwm-base-distill) and it is trained by Chinese dataset. And we based on this model to run SQUAD task on OpenVINO. Below are whole steps that I do to enable SQUAD task and run it with OpenVINO. 
 
 -------
 
@@ -49,22 +49,25 @@ After preparation, you already have the pretrained and distilled BERT model and 
 		--use_tpu=False
 	```
 
-	> If you see the OOM issue, please reduce the batch size or max sequence length. In my case, I set the training batch size and the max sequence length as `32` and  `256`, respectively.
+	> If you see the OOM issue, please reduce the batch size or max sequence length. In my case, I am using GTX1080Ti to do the fine tuning, and I set the training batch size and the max sequence length as `32` and  `256`, respectively.
 
 ### Evaluate the fine tuning result
 
 After the fine tuning completed, you will see the predict result, `dev_predictions.json`, which is svaed at the `${OUTPUT_DIR}`. And we can use `cmrc2018_evaluate.py` to evaluate the result.
-> Please use [this `cmrc2018_evaluate.py`](https://github.com/FengYen-Chang/cmrc2018/blob/master/baseline/cmrc2018_evaluate.py) to do the test if you are using Python3.
+> Please use [this](https://github.com/FengYen-Chang/cmrc2018/blob/master/baseline/cmrc2018_evaluate.py), `cmrc2018_evaluate.py`, to do the evaluation if you are using Python3.
 	
 * Run evaluate
 
 	```sh
 	python cmrc2018_evaluate.py ${DATA_DIR}/cmrc2018_dev.json ${OUTPUT_DIR}/predictions.json
 	```
+	
 * Fine tuning result on SQUAD task:
 	```sh
-	{"AVERAGE": "66.298", "F1": "76.616", "EM": "55.980", "TOTAL": 3219, "SKIP": 0, "FILE": "../../cmrc_test_output_2/dev_predictions.json"}
+	{"AVERAGE": "66.298", "F1": "76.616", "EM": "55.980", "TOTAL": 3219, "SKIP": 0, "FILE": "dev_predictions.json"}
 	```
+	> This result just for reference, your result might not same as me.
+	
 ### Frozen tenserflow model
 
 Before run the inference on OpenVINO, we need to freeze the model to `.pb` format for model Optimizer to convert it to IR after fine tuning process is done. In here, I am refering this [page](https://docs.openvinotoolkit.org/latest/openvino_docs_MO_DG_prepare_model_convert_model_tf_specific_Convert_BERT_From_Tensorflow.html) to convert the model to IR and below are the steps which I done.
