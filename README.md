@@ -236,4 +236,4 @@ optional arguments:
 	[INFO] 2021-01-29 17:49:15,552 Inference time : 0.045 sec
 	Answer:  踢爆
 	```
-	> For the another results, please check this page.
+	> For the another results, please check [this](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO/blob/main/performance.md) page.
