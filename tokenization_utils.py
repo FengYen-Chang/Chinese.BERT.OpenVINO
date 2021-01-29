@@ -197,6 +197,8 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
   unique_id = 1000000000
   # tokenizer = ChineseFullTokenizer(vocab_file=FLAGS.vocab_file, do_lower_case=FLAGS.do_lower_case)
 
+  features = []
+
   for (example_index, example) in enumerate(examples):
     query_tokens = tokenizer.tokenize(example.question_text)
 
@@ -312,13 +314,13 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
           start_position = tok_start_position - doc_start + doc_offset
           end_position = tok_end_position - doc_start + doc_offset
 
-      if example_index < 3:
+      # if example_index < 3:
         # print("*** Example ***")
         # print("unique_id: %s" % (unique_id))
         # print("example_index: %s" % (example_index))
         # print("doc_span_index: %s" % (doc_span_index))
-        print("tokens: %s" % " ".join(
-            [tokenization.printable_text(x) for x in tokens]))
+        # print("tokens: %s" % " ".join(
+        #    [tokenization.printable_text(x) for x in tokens]))
         # print("token_to_orig_map: %s" % " ".join(
         #     ["%d:%d" % (x, y) for (x, y) in six.iteritems(token_to_orig_map)]))
         # print("token_is_max_context: %s" % " ".join([
@@ -352,8 +354,11 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
           input_span_mask=input_span_mask,
           start_position=start_position,
           end_position=end_position)
+      unique_id += 1
 
-      return feature
+      features.append(feature)
+
+  return features
 
 def _improve_answer_span(doc_tokens, input_start, input_end, tokenizer,
                          orig_answer_text):
@@ -437,4 +442,4 @@ def export_feature(vocab_file, data_file, do_lower_case, max_seq_length, doc_str
       input_file=data_file, is_training=_is_training)
   logging.info("Load {} examples".format(len(examples)))
   features = convert_examples_to_features(examples, tokenizer, max_seq_length,doc_stride, max_query_length, _is_training)
-  return features
+  return examples, features

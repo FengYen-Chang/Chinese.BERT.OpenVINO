@@ -8,6 +8,7 @@ log.basicConfig(level=log.INFO, format=formatter)
 
 from openvino.inference_engine import IECore
 import tokenization_utils
+# import predict_utils
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--device", default="CPU", type=str)
@@ -18,9 +19,12 @@ parser.add_argument("-i", "--input-data", required=True, type=str)
 parser.add_argument("--max-seq-length", type=int, default=256)
 parser.add_argument("--doc-stride", type=int, default=128)
 parser.add_argument("--max-query-length", type=int, default=64)
+parser.add_argument("-qn", "--question_number", default=0, type=int)
+parser.add_argument("-mal", "--max_answer_length", default=30, type=int)
+parser.add_argument("-nbest", "--num_of_best_set", default=10, type=int)
+
 
 args = parser.parse_args()
-
 
 def main():
     log.info("Initializing Inference Engine")
@@ -52,7 +56,7 @@ def main():
     log.info(output_info_text)
 
     # tokenization
-    feature = tokenization_utils.export_feature(
+    examples, features = tokenization_utils.export_feature(
         vocab_file = args.vocab, 
         data_file = args.input_data, 
         do_lower_case = False, 
@@ -61,27 +65,70 @@ def main():
         max_query_length = args.max_query_length, 
     )
 
-    inputs = {
-        input_names[0]: np.array([feature.input_ids], dtype=np.int32),
-        input_names[1]: np.array([feature.input_mask], dtype=np.int32),
-        input_names[2]: np.array([feature.segment_ids], dtype=np.int32),
-    }
+    print ("Content: ", "".join(examples[0].doc_tokens))
+    print ("Question: ", examples[0].question_text)
 
-    # infer by IE
-    t_start = time.perf_counter()
-    res = ie_encoder_exec.infer(inputs=inputs)
-    t_end = time.perf_counter()
-    log.info("Inference time : {:0.2} sec".format(t_end - t_start))
+    infer_feature = []
+    for _idx, _ftr in enumerate(features):
+        if _ftr.example_index == args.question_number :
+            infer_feature.append(_ftr)
 
-    start_logits = res[output_names[0]].flatten()
-    end_logits = res[output_names[1]].flatten()
+    infered_results = []
+    n_best_results = []
 
-    start_index = np.argmax(start_logits)
-    end_index = np.argmax(end_logits)
-    print(start_index, end_index)
+    for i, feature in enumerate(infer_feature):
+        inputs = {
+            input_names[0]: np.array([feature.input_ids], dtype=np.int32),
+            input_names[1]: np.array([feature.input_mask], dtype=np.int32),
+            input_names[2]: np.array([feature.segment_ids], dtype=np.int32),
+        }
 
-    tok_tokens = feature.tokens[start_index:(end_index + 1)]
-    print("".join(tok_tokens))
+        t_start = time.perf_counter()
+        res = ie_encoder_exec.infer(inputs=inputs)
+        t_end = time.perf_counter()
+        log.info("Inference time : {:0.2} sec".format(t_end - t_start))
 
+        start_logits = res[output_names[0]].flatten()
+        end_logits = res[output_names[1]].flatten()
+
+        start_logits = start_logits - np.log(np.sum(np.exp(start_logits)))
+        end_logits = end_logits - np.log(np.sum(np.exp(end_logits)))
+
+        sorted_start_index = np.argsort(-start_logits)
+        sorted_end_index = np.argsort(-end_logits)
+
+        token_length = len(feature.tokens)
+
+        for _s_idx in sorted_start_index[:args.num_of_best_set]:
+            for _e_idx in sorted_end_index[:args.num_of_best_set]:
+                if _s_idx >= token_length:
+                    continue
+                if _e_idx >= len(feature.tokens):
+                    continue
+                if _s_idx not in feature.token_to_orig_map:
+                    continue
+                if _s_idx not in feature.token_to_orig_map:
+                    continue
+                if not feature.token_is_max_context.get(_s_idx, False):
+                    continue
+                if _e_idx < _s_idx:
+                    continue
+                length = _e_idx - _s_idx + 1
+                if length > args.max_answer_length:
+                    continue
+                n_best_results.append((start_logits[_s_idx] +  end_logits[_e_idx], 
+                    "".join(examples[i].doc_tokens[feature.token_to_orig_map[_s_idx]:feature.token_to_orig_map[_e_idx] + 1])))
+
+    max_prob = -100000
+    best_result = ""
+    for _res in n_best_results:
+        _prob, _text = _res
+        if _prob > max_prob:
+            max_prob = _prob
+            best_result = _text
+
+    print ("Answer: ", best_result)
+
+    
 if __name__ == "__main__":
     main()
