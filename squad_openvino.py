@@ -65,8 +65,8 @@ def main():
         max_query_length = args.max_query_length, 
     )
 
-    print ("Content: ", "".join(examples[0].doc_tokens))
-    print ("Question: ", examples[0].question_text)
+    print ("Content: ", "".join(examples[args.question_number].doc_tokens))
+    print ("Question: ", examples[args.question_number].question_text)
 
     infer_feature = []
     for _idx, _ftr in enumerate(features):
