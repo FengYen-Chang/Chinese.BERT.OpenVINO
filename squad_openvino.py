@@ -8,7 +8,6 @@ log.basicConfig(level=log.INFO, format=formatter)
 
 from openvino.inference_engine import IECore
 import tokenization_utils
-# import predict_utils
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--device", default="CPU", type=str)
@@ -107,7 +106,7 @@ def main():
                     continue
                 if _s_idx not in feature.token_to_orig_map:
                     continue
-                if _s_idx not in feature.token_to_orig_map:
+                if _e_idx not in feature.token_to_orig_map:
                     continue
                 if not feature.token_is_max_context.get(_s_idx, False):
                     continue
