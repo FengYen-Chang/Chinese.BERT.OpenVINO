@@ -61,6 +61,16 @@ After the fine tuning completed, you will see the predict result, `dev_predictio
 	```sh
 	python cmrc2018_evaluate.py ${DATA_DIR}/cmrc2018_dev.json ${OUTPUT_DIR}/predictions.json
 	```
+	> If you meet below error, please run $python and follow the command to download the `punkt` sentence tokenizer.
+	> ```sh
+	> Resource punkt not found.
+	> Please use the NLTK Downloader to obtain the resource:
+	> 
+  	> >>> import nltk
+  	> >>> nltk.download('punkt')
+	> ```
+  	> For more information see: https://www.nltk.org/data.html
+	> 
 	
 * Fine tuning result on SQUAD task:
 	```sh
