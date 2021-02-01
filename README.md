@@ -236,4 +236,12 @@ optional arguments:
 	[INFO] 2021-01-29 17:49:15,552 Inference time : 0.045 sec
 	Answer:  踢爆
 	```
-	> For the another results, please check this page.
+	> For the another results, please check [this](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO/blob/main/performance.md) page.
+
+### Reference
+
+* [bert](https://github.com/google-research/bert)
+* [roberta-wwm-base-distill](https://github.com/xiongma/roberta-wwm-base-distill)
+* [cmrc2018](https://github.com/ymcui/cmrc2018)
+* [Convert TensorFlow* BERT Model to the Intermediate Representation](https://docs.openvinotoolkit.org/latest/openvino_docs_MO_DG_prepare_model_convert_model_tf_specific_Convert_BERT_From_Tensorflow.html)
+* [OpenVINOでfine-tuningしたBERTモデルを使用する](https://tech.gmogshd.com/fine-tuning-bert-model-with-openvino/)
