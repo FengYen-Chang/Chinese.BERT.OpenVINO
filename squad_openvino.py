@@ -116,7 +116,7 @@ def main():
                 if length > args.max_answer_length:
                     continue
                 n_best_results.append((start_logits[_s_idx] +  end_logits[_e_idx], 
-                    "".join(examples[i].doc_tokens[feature.token_to_orig_map[_s_idx]:feature.token_to_orig_map[_e_idx] + 1])))
+                    "".join(examples[args.question_number].doc_tokens[feature.token_to_orig_map[_s_idx]:feature.token_to_orig_map[_e_idx] + 1])))
 
     max_prob = -100000
     best_result = ""
