@@ -1,6 +1,6 @@
 # Performace Result
 
-This page will show the all performance data for the converted IR model.
+This page shows the all performance data for the converted IR model.
 
 ### Performance Result on cmrc2018 Dataset
 
