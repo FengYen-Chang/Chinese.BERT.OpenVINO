@@ -248,6 +248,16 @@ optional arguments:
 	```
 	> For the another results, please check [this](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO/blob/main/performance.md) page.
 
+### Run All cmrc2018 Dataset
+
+```sh
+python run_all_squad_openvino.py \
+	-v ${CHINESE_VOCAB_FILE_DIR}/vocab.txt \
+	-m ${MODEL_DIR}/inference_graph.xml \
+	-i ${INPUT_FILE_DIR}/cmrc2018_dev.json \
+	-nbest 20 
+```
+
 ### Reference
 
 * [bert](https://github.com/google-research/bert)
