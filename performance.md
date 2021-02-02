@@ -2,15 +2,6 @@
 
 This page will show the all performance data for the converted IR model.
 
-### Performance Result by Benchmark_app 
-
-| data type | CPU | GPU | 
-| :------ | :-----: | :-----: | 
-| FP32 | 18.37 | 15.94 | 
-| FP16 | 19.20 | 25.44 | 
-
-> UNIT: FPS
-
 ### Performance Result on cmrc2018 Dataset
 
 | framework | AVERAGE | F1 | EM |  
@@ -19,6 +10,16 @@ This page will show the all performance data for the converted IR model.
 | OpenVINO | 66.467 | 76.767 | 56.167 |
 
 > As the **N best** method had some different between these two framework, the results have some different.
+
+
+### Performance Result of OpenVINO IR Model by Benchmark_app 
+
+| data type | CPU | GPU | 
+| :------ | :-----: | :-----: | 
+| FP32 | 18.37 | 15.94 | 
+| FP16 | 19.20 | 25.44 | 
+
+> UNIT: FPS
 
 ### Original Result
 
