@@ -9,7 +9,7 @@ This page shows the all performance data for the converted IR model.
 | Tensorflow | 66.298 | 76.616 | 55.980 |
 | OpenVINO | 66.467 | 76.767 | 56.167 |
 
-> As the **N best** method had some different between these two framework, the results have some different.
+> As the **N best** method had some different between these two framework, the results have some differences.
 
 
 ### Performance Result of OpenVINO IR Model by Benchmark_app 
