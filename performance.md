@@ -9,17 +9,17 @@ This page shows the all performance data for the converted IR model.
 | Tensorflow | 66.298 | 76.616 | 55.980 |
 | OpenVINO | 66.467 | 76.767 | 56.167 |
 
-> As the **N best** method had some different between these two framework, the results have some differences.
+> As the **N best** method has some differences between these two framework, the results have some differences.
 
 
-### Performance Result of OpenVINO IR Model by Benchmark_app 
+### Latency Result of OpenVINO IR Model by Benchmark_app 
 
 | data type | CPU | GPU | 
 | :------ | :-----: | :-----: | 
-| FP32 | 18.37 | 15.94 | 
-| FP16 | 19.20 | 25.44 | 
+| FP32 | **54.82** | 63.69 | 
+| FP16 | 54.33 | **40.34** | 
 
-> UNIT: FPS
+> UNIT: ms
 
 ### Original Result
 
