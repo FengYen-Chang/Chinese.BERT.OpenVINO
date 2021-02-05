@@ -248,6 +248,33 @@ optional arguments:
 	```
 	> For the another results, please check [this](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO/blob/main/performance.md) page.
 
+#### Traditional Chinese Support
+
+As the label file is **Simplify Chinese**, please convert use [chinese-converter](https://pypi.org/project/chinese-converter/) to convert it to Traditional Chinese and then run the inference. The result will like below.
+
+```sh
+[INFO] 2021-02-05 17:27:26,527 Initializing Inference Engine
+[INFO] 2021-02-05 17:27:26,533 Plugin version is 2.1.2021.2.0-1877-176bdf51370-releases/2021/2
+[INFO] 2021-02-05 17:27:26,533 Loading network files:
+        ../frozen_model//inference_graph.xml
+        ../frozen_model//inference_graph.bin
+[INFO] 2021-02-05 17:27:26,662 Loading model to the CPU
+[INFO] 2021-02-05 17:27:27,114 Inputs number: 3
+        - IteratorGetNext/placeholder_out_port_0 : [1, 256]
+        - IteratorGetNext/placeholder_out_port_1 : [1, 256]
+        - IteratorGetNext/placeholder_out_port_3 : [1, 256]
+[INFO] 2021-02-05 17:27:27,114 Outputs number: 2
+        - unstack/Squeeze_ : [1, 256]
+        - unstack/Squeeze_527 : [1, 256]
+**********read_squad_examples complete!**********
+[INFO] 2021-02-05 17:27:27,131 Load 4 examples
+Content:  基於《跑跑卡丁車》與《泡泡堂》上所開發的遊戲，由韓國Nexon開發與發行。中國大陸由盛大遊戲運營，這是Nexon時隔6年再次授予盛大網絡其遊戲運營權。臺灣由遊戲橘子運營。玩家以水槍、小槍、錘子或是水炸彈泡封敵人(玩家或NPC)，即為一泡封，將水泡擊破為一踢爆。若水泡未在時間內踢爆，則會從水泡中釋放或被隊友救援(即為一救援)。每次泡封會減少生命數，生命數耗完即算為踢爆。重生者在一定時間內為無敵狀態，以踢爆數計分較多者獲勝，規則因模式而有差異。以2V2、4V4隨機配對的方式，玩家可依勝場數爬牌位(依序為原石、銅牌、銀牌、金牌、白金、鑽石、大師)，可選擇經典、熱血4分鐘內不得進行配對(每次中離+4分鐘)。開放時間為暑假或寒假期間內不定期開放，8人經典模式隨機配對，采計分方式，活動時間內分數越多，終了時可依該名次獲得獎勵。
+Question:  生命數耗完即算為什麼？
+[INFO] 2021-02-05 17:27:27,207 Inference time : 0.061 sec
+[INFO] 2021-02-05 17:27:27,253 Inference time : 0.045 sec
+Answer:  踢
+```
+
 ### Run All cmrc2018 Dataset
 
 ```sh
