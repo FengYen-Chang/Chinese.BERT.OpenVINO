@@ -19,7 +19,7 @@ This page shows the all performance data for the converted IR model.
 | FP32 | **54.82** | 63.69 | 
 | FP16 | 54.33 | **40.34** | 
 
-> UNIT: ms
+> UNIT: ms/per-infer
 
 ### Original Result
 
